@@ -35,7 +35,6 @@ try {
 app.get('/', async (req, res) => {
     res.send("Welcome to the Mongoose API")
 });
-ffffffffff
 // Express route to fetch all reviews
 app.get('/fetchReviews', async (req, res) => {
   try {
@@ -45,7 +44,6 @@ app.get('/fetchReviews', async (req, res) => {
     res.status(500).json({ error: 'Error fetching documents' });
   }
 });
-a
 // Express route to fetch reviews by a particular dealer
 app.get('/fetchReviews/dealer/:id', async (req, res) => {
   try {
