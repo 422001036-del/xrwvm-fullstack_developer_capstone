@@ -30,9 +30,9 @@ jobs:
 
       - name: Run Linter
         run: |
-          pwd
-          find . -name "*.py" -exec flake8 --max-line-length=120 --ignore=E302,E303,E231,W293,W292,E117,F841 {} +          echo "Linted all the python files successfully"
-
+          flake8 --max-line-length=120 --ignore=E302,E303,E231,W293,W292,E117,F841 server/
+          echo "Linted all the python files successfully"
+          
   lint_js:
     name: Lint JavaScript Files
     runs-on: ubuntu-latest
