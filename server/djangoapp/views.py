@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import CarMake, CarModel
 from .populate import initiate
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.models import User
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -56,3 +57,34 @@ def add_review(request):
         return JsonResponse({"status": 200})
     except Exception:
         return JsonResponse({"status": 401, "message": "Error in posting review"})
+
+@csrf_exempt
+def registration(request):
+    data = json.loads(request.body)
+    username = data['userName']
+    password = data['password']
+    first_name = data.get('firstName', '')
+    last_name = data.get('lastName', '')
+    email = data.get('email', '')
+
+    username_exist = False
+    try:
+        User.objects.get(username=username)
+        username_exist = True
+    except User.DoesNotExist:
+        logger.debug("{} is new user".format(username))
+
+    if not username_exist:
+        user = User.objects.create_user(
+            username=username,
+            first_name=first_name,
+            last_name=last_name,
+            password=password,
+            email=email,
+        )
+        login(request, user)
+        data = {"userName": username, "status": "Authenticated"}
+        return JsonResponse(data)
+    else:
+        data = {"userName": username, "error": "Already Registered"}
+        return JsonResponse(data)
