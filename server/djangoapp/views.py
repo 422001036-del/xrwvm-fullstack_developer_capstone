@@ -2,7 +2,7 @@ from .restapis import get_request, post_review
 from django.http import JsonResponse
 from .models import CarMake, CarModel
 from .populate import initiate
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 import logging
 import json
@@ -32,10 +32,14 @@ def login_user(request):
         data = {"userName": username, "status": "Authenticated"}
     return JsonResponse(data)
 
-def get_dealerships(request):
-    endpoint = "/fetchDealers"
+def get_dealerships(request, state="All"):
+    if state == "All":
+        endpoint = "/fetchDealers"
+    else:
+        endpoint = "/fetchDealers/" + state
     dealerships = get_request(endpoint)
     return JsonResponse({"status": 200, "dealers": dealerships})
+
 
 def get_dealer_reviews(request, dealer_id):
     endpoint = "/fetchReviews/dealer/" + str(dealer_id)
@@ -88,3 +92,8 @@ def registration(request):
     else:
         data = {"userName": username, "error": "Already Registered"}
         return JsonResponse(data)
+
+def logout_request(request):
+    logout(request)
+    data = {"userName": ""}
+    return JsonResponse(data)
